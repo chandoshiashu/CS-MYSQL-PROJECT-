@@ -1,13 +1,24 @@
 import mysql.connector
+import random
+import math
 from mysql.connector import errorcode
 
 # mention your root password here. set the password going to the MySQL WORKBENCH
 cnx = mysql.connector.connect(user='root', password='@password',
-                              host='127.0.0.1',
-                              database='argentina')
+                              host='127.0.0.1')
+
 # \connect root@localhost:3306
 
 cur = cnx.cursor()
+
+try:
+    cur.execute("DROP DATABASE argentina;")
+except mysql.connector.Error as err:
+    print("Database doesn't exist !!! Going to created...")
+
+cur.execute("CREATE DATABASE argentina;")
+
+cnx.database = "argentina"
 
 TABLES = {}
 
@@ -30,9 +41,8 @@ TABLES["PATH_FINDER"] = (
 TABLES["SURVIVAL"] = (
     "CREATE TABLE `HOTELS` ("
     "  `Province` varchar(50) NOT NULL, "
-    "  `Island_Name` varchar(50) NOT NULL, "
-    "  `Hotel_Dest` varchar(50) NOT NULL, "
-    "  `Survival_Cost` varchar(50) NOT NULL) ENGINE=InnoDB")
+    "  `Hotel` varchar(50) NOT NULL, "
+    "  `Hotel_Cost` varchar(50) NOT NULL) ENGINE=InnoDB")
 
 
 for DATA_TYPE in TABLES:
@@ -60,8 +70,8 @@ add_path_finder = ("INSERT INTO airlines "
                "VALUES (%s, %s)")
 
 add_survivor = ("INSERT INTO hotels "
-               "(Island_Name, Province, Hotel_Dest, Price, Survival_Cost) "
-               "VALUES (%s, %s, %s, %s, %s)")
+               "(Province, Hotel, Hotel_Cost) "
+               "VALUES (%s, %s, %s)")
 
 
 argentina_islands = {
@@ -77,10 +87,11 @@ airlines = ["LATAM Airlines", "American Airlines", "Eastern Airlines", "Copa Air
 
 
 
+
 for province in argentina_islands.keys():
     for item_island in argentina_islands[province]:
         cur.execute(add_place, (province, item_island))
-
+        pass
 
 
 # Create a nested list to store suitable airlines for each island
@@ -100,10 +111,43 @@ for province, islands in argentina_islands.items():
 for item in suitable_airlines:
     for airline in suitable_airlines[item]:
         cur.execute(add_path_finder, (item, airline))
-
+        pass
 
 # Print the nested list
 # print(suitable_airlines)
+
+def Random_Suffix():
+    Letters = ['F', 'D', 'X', 'Y']
+    Str = "0x"
+    for i in range(12):
+        if(bool(random.choice((0, 1)))):
+            Str += random.choice(Letters)
+
+        else:
+            Str += chr(random.randint(48, 57))
+
+    return Str
+
+Hotel_type_prefixes = ["Advanced", "Minecraft", "Minimal", "Rudiment", "Minecraft","Advanced", "Rudiment", "Minimal"]
+Hotel_Prices = {"Advanced":[], "Minimal":[], "Minecraft":[], "Rudiment":[]}
+
+def Set_PriceHotels():
+    for count in range(len(Hotel_Prices)):
+        Hotel_Prices[list(Hotel_Prices.keys())[count]] = [
+            f"Floor {i + 1} Hotels :- ${(random.randint(450 // (count + 1), 550 // (count + 1)))}" for i in
+            range(random.randint(3, 4))]
+        # print(Hotel_Prices[list(Hotel_Prices.keys())[count]])
+
+for province in argentina_islands:
+    for i in range(random.randint(1, 4)):
+        Element = random.choice(Hotel_type_prefixes)
+        random.shuffle(Hotel_type_prefixes)
+        Set_PriceHotels()
+        Hotel_Naming = f"Hotel_{Element}_{Random_Suffix()}"
+        for j in range(len(Hotel_Prices[Element])):
+            cur.execute(add_survivor, (province, Hotel_Naming, Hotel_Prices[Element][j]))
+            # print(Hotel_Naming)
+
 
 cnx.commit()
 
