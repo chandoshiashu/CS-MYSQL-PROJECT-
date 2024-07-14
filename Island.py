@@ -2,15 +2,13 @@ import mysql.connector
 from mysql.connector import errorcode
 
 # mention your root password here. set the password going to the MySQL WORKBENCH
-cnx = mysql.connector.connect(user='root', password='@password',
+cnx = mysql.connector.connect(user='root', password='NonuAshish1234)(*&',
                               host='127.0.0.1',
                               database='argentina')
 
 # \connect root@localhost:3306
 
 cur = cnx.cursor()
-
-
 def Invalid_Repeat(User_None):
     if (User_None):
         print("\n\t\tKindly Input Valid Value According to the Menu :(( ")
@@ -88,7 +86,6 @@ def Q_Airline(island):
 
     return Airlines[User_Airline-1]
 
-
 def Q_Hotel(User_Province, Airline):
     Query = f"Select Distinct Hotel from Hotels WHERE province='{User_Province}'"
     cur.execute(Query)
@@ -137,7 +134,7 @@ def Q_Hotel_Floor(FloorWise, User_Hotel):
         Invalid_Repeat(User_None)
         User_None = True
 
-        print(f"You have chosen the Hotel named {User_Hotel}")
+        print(f"You have choosen the Hotel named {User_Hotel}")
         for element in FloorWise:
             print(element)
 
