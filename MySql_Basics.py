@@ -4,7 +4,7 @@ import math
 from mysql.connector import errorcode
 
 # mention your root password here. set the password going to the MySQL WORKBENCH
-cnx = mysql.connector.connect(user='root', password='@password',
+cnx = mysql.connector.connect(user='root', password='NonuAshish1234)(*&',
                               host='127.0.0.1')
 
 # \connect root@localhost:3306
@@ -148,12 +148,8 @@ for province in argentina_islands:
             cur.execute(add_survivor, (province, Hotel_Naming, Hotel_Prices[Element][j]))
             # print(Hotel_Naming)
 
-
 cnx.commit()
-
 # print(argentina_islands)
-
-
 cur.close()
 cnx.close()
 
