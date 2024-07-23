@@ -44,6 +44,14 @@ TABLES["SURVIVAL"] = (
     "  `Hotel` varchar(50) NOT NULL, "
     "  `Hotel_Cost` varchar(50) NOT NULL) ENGINE=InnoDB")
 
+TABLES["RECEIPT"] = (
+    "CREATE TABLE `RECEIPTS` ("
+    "  `Username` varchar(50) NOT NULL, "
+    "  `Name_Id` varchar(50) NOT NULL, "
+    "  `Island` varchar(50) NOT NULL, "
+    "  `Province` varchar(100) NOT NULL, "
+    "  `Trip_Id` varchar(100) NOT NULL) ENGINE=InnoDB")
+
 
 for DATA_TYPE in TABLES:
     DATA_DESC = TABLES[DATA_TYPE]
