@@ -146,24 +146,58 @@ def Q_Hotel_Floor(FloorWise, User_Hotel):
     return User_Hotel_Floor
 
 
+add_receipt = ("INSERT INTO receipts "
+               "(Username, Name_Id, Island, Province, Trip_Id) "
+               "VALUES (%s, %s, %s, %s, %s)")
+New_Trip = True
+
 def Questioner():
 
+    global New_Trip
+    New_Trip = False
+    Username = input("Enter your full name here :- ")
     User_Province = Q_Province()
     User_Island = Q_Island(User_Province)
     User_Airline = Q_Airline(User_Island)
     User_Hotel = Q_Hotel(User_Province, User_Airline)
     User_Hotel_Floor = Q_Hotel_Floor(User_Hotel[1], User_Hotel[0])
 
+    User_Id = (Username.replace(" ", "")).capitalize() + "_0FUSER2027"
+    Trip_Id = (User_Province.replace(" ", "")+"_"+User_Island.replace(" ", "")).capitalize() + "_0FTRIP2027"
+
+    cur.execute(add_receipt, (Username, User_Id, User_Island, User_Province, Trip_Id))
+
     print("\n \n \t\t\t\tThank You :)) ")
     print("\t\tYour Trip have been confirmed :)) ")
-    print("\t\t\tYour Trip Details... \n\n")
 
-    print(
-        f"\t\t\t Island : {User_Island} \n\t\t\t Province : {User_Province} \n\t\t\t Airline : {User_Airline} \n\t\t\t "
-        f"Hotel : {User_Hotel[0]} \n\t\t\t Hotel In-Depth Address : {User_Hotel_Floor} \n")
+
+    User_Ask = None
+    while User_Ask != 4:
+        User_Ask = int(input("Press (1/2/3) accordingly \n1. Show my trip details \n2. Cancel my Current Trip\n3. To establish my new trip\n4. Exit\n \t\t\t:-- "))
+        if(str(User_Ask) not in "1234"):
+            print("Invalid Input \nKindly Re-enter :)\n If you want to exit, press 4")
+
+        else:
+            if User_Ask == 1:
+                print("\t\t\tYour Current Trip Details... \n\n")
+                print(
+                    f"\t\t\t Username : {Username} (User_Id : {User_Id}) \n\t\t\t Trip_Id : {Trip_Id} \n\t\t\t Island : {User_Island} \n\t\t\t Province : {User_Province} \n\t\t\t Airline : {User_Airline} \n\t\t\t "
+                    f"Hotel : {User_Hotel[0]} \n\t\t\t Hotel In-Depth Address : {User_Hotel_Floor} \n")
+
+            elif User_Ask == 2:
+                cur.execute(f"DELETE from receipts where Name_Id = '{User_Id}' and Trip_Id = '{Trip_Id}' ")
+                print("Your Trip has been cancelled !! ")
+
+
+            elif User_Ask == 3: New_Trip = True; User_Ask = 4
+
 
 
 Questioner()
+while(New_Trip != False):
+    Questioner()
+
+print("Thank You :)) ")
 
 cnx.commit()
 
